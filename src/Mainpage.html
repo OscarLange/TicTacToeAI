@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Mainpage.css">
+    <script src="Mainpage.js"></script>
+    <title>Tic Tac Toe</title>
+</head>
+<body>
+<div id="bodydiv">
+    <div id="headerdiv">
+        <h1 id="header_text">
+            Tic Tac Toe
+        </h1>
+    </div>
+    <div id="buttondiv">
+        <table id="buttontable">
+            <tr id="row1">
+                <td id="td_11">
+                    <button id="button11" class="button" onclick=buttonpressed(11,true)>
+
+                    </button>
+                </td>
+                <td id="td_12">
+                    <button id="button12" class="button" onclick=buttonpressed(12,true)>
+
+                    </button>
+                </td>
+                <td id="td_13">
+                    <button id="button13" class="button" onclick=buttonpressed(13,true)>
+
+                    </button>
+                </td>
+            </tr>
+            <tr id="row2">
+                <td  id="td_21">
+                    <button id="button21" class="button" onclick=buttonpressed(21,true)>
+
+                    </button>
+                </td>
+                <td  id="td_22">
+                    <button id="button22" class="button" onclick=buttonpressed(22,true)>
+
+                    </button>
+                </td>
+                <td  id="td_23">
+                    <button id="button23" class="button" onclick=buttonpressed(23,true)>
+
+                    </button>
+                </td>
+            </tr>
+            <tr id="row3">
+                <td id="td_31">
+                    <button id="button31" class="button" onclick=buttonpressed(31,true)>
+
+                    </button>
+                </td>
+                <td id="td_32">
+                    <button id="button32" class="button" onclick=buttonpressed(32,true)>
+
+                    </button>
+                </td>
+                <td id="td_33">
+                    <button id="button33" class="button" onclick=buttonpressed(33,true)>
+
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="Game Counter">
+        <label id="counterlabel">
+            Round: 0
+        </label>
+    </div>
+    <div id="finishdiv">
+        <button id="finish_button" style="visibility: hidden" onclick=reload()>
+            &#8634
+        </button>
+    </div>
+</div>
+
+</body>
+</html>

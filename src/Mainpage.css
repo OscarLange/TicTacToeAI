@@ -1,0 +1,42 @@
+#bodydiv{
+   color: blue;
+    margin-left: 80vh;
+    width: 60vh;
+    height: 100vh;
+}
+
+#buttondiv{
+    align-self: auto;
+}
+
+table, tr, td {
+    border: 1px solid black;
+    border-spacing: 0px;
+}
+
+table{
+    table-layout: fixed;
+}
+
+td{
+    height: 10vh;
+    width: 10vh;
+}
+
+.button{
+    padding: 5vh;
+}
+
+.label{
+    padding: 4vh;
+}
+
+.newtd{
+    background: greenyellow;
+}
+
+#finish_button{
+    padding: 20px;
+    color: black;
+    background: greenyellow;
+}
