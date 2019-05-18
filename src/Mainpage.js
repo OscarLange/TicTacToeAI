@@ -43,17 +43,22 @@ function buttonpressed(buttonid, human) {
         document.getElementById("td_" + buttonid).removeChild(document.getElementById("button" + buttonid));
     }
 
+
+
     if(!treeconstructed){
         start(field);
         evaluatetree();
     }
-    else{
+    else if(human){
         trimtree();
     }
+
 
     if(human){
         nextmove();
     }
+
+
 
 }
 
@@ -402,8 +407,6 @@ function updatefield(msg) {
 /// AI PART ____________________________________
 
 
-let score = 0;
-
 
 function start(tmp_field){
 
@@ -412,6 +415,8 @@ function start(tmp_field){
     tree["knot"] = copyfield;
 
     tree["childknots"] = createfringe(shallowcopyfield(copyfield), "O");
+
+    treeconstructed = true;
 
 }
 
@@ -434,15 +439,16 @@ function evaluatetree(){
 function trimtree(){
     let childknots = tree["childknots"];
     for(let i = 0; i < childknots.length; i++){
-        let tmp_knot = shallowcopyfield(childknots[i]);
-        let tmp_field = tmp_knot["knot"];
+        let tmp_knot = childknots[i];
+        let tmp_field = shallowcopyfield(tmp_knot["knot"]);
         if(comparefield(tmp_field, field)){
             tree = tmp_knot;
+            costtree = costtree["childknots"][i];
         }
     }
 }
 
-function comparefield(){
+function comparefield(field1, field2){
     if(differencefield(field1, field2) === null){
         return true;
     }
@@ -457,8 +463,8 @@ function nextmove(){
     let childknots = costtree["childknots"];
     let move = 0;
     for(let x= 0; x < childknots.length; x++){
-        if(Number(childknots[x]) === maxcost){
-            move = i;
+        if(Number(childknots[x]["knot"]) === maxcost){
+            move = x;
             break;
         }
     }
@@ -492,72 +498,68 @@ function differencefield(field1, field2){
     return null;
 }
 
-function max(tree){
+function max(new_tree){
     let maxscore = Number.NEGATIVE_INFINITY;
-    let currentfield = shallowcopyfield(tree["knot"]);
+    let currentfield = shallowcopyfield(new_tree["knot"]);
     let result = checkvictoryfield(currentfield);
     if(result === "draw"){
-        return 0;
+        return {"knot": 0};
     }
     else if(result === "none"){
-        let childknots = tree["childknots"];
+        let childknots = new_tree["childknots"];
         let tmp_childknots = [];
-        if(childknots === null){
-            return 0;
-        }
         for(let i = 0; i < childknots.length; i++){
             let score = min(childknots[i]);
             tmp_childknots = tmp_childknots.concat(score);
-            if(score > maxscore){
-                maxscore = score;
+            if(score["knot"] > maxscore){
+                maxscore = score["knot"];
             }
         }
         let tmp_tree = {};
-        tmp_tree["knot"] = score;
+        tmp_tree["knot"] = maxscore;
         tmp_tree["childknots"] = tmp_childknots;
+        tmp_tree["type"] = "maximize";
         return tmp_tree;
     }
     else {
         if(result.split(",")[0].includes("X")){
-            return -10;
+            return {"knot": -10};
         }
         else{
-            return 10;
+            return {"knot": 10};
         }
     }
 }
 
-function min(tree){
+function min(new_tree){
     let minscore = Number.POSITIVE_INFINITY;
-    let currentfield = shallowcopyfield(tree["knot"]);
-    let result = checkvictory(currentfield);
+    let currentfield = shallowcopyfield(new_tree["knot"]);
+    let result = checkvictoryfield(currentfield);
     if(result === "draw"){
-        return 0;
+        return {"knot": 0};
     }
     else if(result === "none"){
-        let childknots = tree["childknots"];
-        if(childknots === null){
-            return 0;
-        }
+        let childknots = new_tree["childknots"];
         let tmp_childknots = [];
         for(let i = 0; i < childknots.length; i++){
             let score = max(childknots[i]);
             tmp_childknots = tmp_childknots.concat(score);
-            if(score < minscore){
-                minscore = score;
+            if(score["knot"] < minscore){
+                minscore = score["knot"];
             }
         }
         let tmp_tree = {};
-        tmp_tree["knot"] = score;
+        tmp_tree["knot"] = minscore;
         tmp_tree["childknots"] = tmp_childknots;
+        tmp_tree["type"] = "minimize";
         return tmp_tree;
     }
     else {
         if(result.split(",")[0].includes("X")){
-            return -10;
+            return {"knot": -10};
         }
         else{
-            return 10;
+            return {"knot": 10};
         }
     }
 }
@@ -606,6 +608,17 @@ function createfield(tmp_field, symbol, row, column){
     }
 }
 
+function checknull(tmp_field){
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if(tmp_field[i][j] === null){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 
 function checkvictoryfield(tmp_field) {
     for (let i = 0; i < 3; i++) {
@@ -619,7 +632,7 @@ function checkvictoryfield(tmp_field) {
     if (!checkdiagonalefield(tmp_field).includes("none")) {
         return checkdiagonalefield(tmp_field);
     }
-    if (Number(round) === 9) {
+    if (checknull(tmp_field)) {
         return "draw";
     } else {
         return "none";
